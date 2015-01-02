@@ -98,11 +98,11 @@ app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
 var callback = function() {
-  debug('Express server listening on port ' + server.address().port);
+  debug('Express server listening on port ' + app.get('port'));
 };
 
 if (process.env.OPENSHIFT_NODEJS_IP) {
   app.listen(app.get('port'), app.get('host'), callback);
 } else {
-  app.listen(app.get('port'), app.get('host'), callback);
+  app.listen(app.get('port'), callback);
 }
