@@ -111,18 +111,21 @@ app.all('/verify', function(req, res) {
 
   method.call(client, receipt, true, function(valid, msg, data) {
     result.ok = valid;
-    result.data = {
-      msg: msg,
-      response: data
-    };
 
     if (valid) {
       console.log("Valid receipt");
+
+      result.data = data;
     } else {
       console.log("Invalid receipt");
+
       var err = formatError(data.status);
-      result.data.code = err.code;
-      result.data.error = {message: err.msg || msg};
+      result.data = {
+        code: err.code,
+        error: {
+          message: err.msg || msg
+        }
+      };
 
       var latestReceipt = data.latest_receipt_info || receipt;
       if (latestReceipt) {
