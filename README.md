@@ -35,3 +35,4 @@ To use it for auto-renewable subscription, you have to provide receipt verificat
 ## NOTES:
 
 1. [how to sync openshift and github code](https://forums.openshift.com/how-to-keep-a-github-repository-and-an-openshift-repository-in-sync)
+2. Opening this URL launches iTunes or iTunes Store, and then displays the Manage Subscription page, https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions
