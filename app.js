@@ -20,17 +20,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/hello', function(req, res) {
+app.get('/', function(req, res) {
   res.send('hello');
 });
 
-app.all('/', function(req, res) {
+/**
+ * transaction {Object} contains base64 receipt
+ * isSandBox {String} 'true'|'false'
+ * password {String}
+ */
+app.all('/verify', function(req, res) {
   console.log(req.body);
+
   var transaction = req.param('transaction');
+  var password = req.param('password');
+  var isAutoRenew = req.param('isAutoRenew') === 'true';
+  var isSandBox = req.param('isSandBox') === 'true';
   var receipt = transaction.transactionReceipt;
   var result = {};
-  var client = new IAPVerifier('2567363b81c44bdeac914c8d627d50dc');
-  client.verifyAutoRenewReceipt(receipt, true, function(valid, msg, data) {
+  var client = new IAPVerifier(password, !isSandBox);
+  var method = isAutoRenew ? client.verifyAutoRenewReceipt : client.verifyReceipt;
+
+  method.call(client, receipt, true, function(valid, msg, data) {
     result.data = {
       msg: msg,
       data: data
@@ -83,8 +94,15 @@ app.use(function(err, req, res, next) {
 
 var debug = require('debug')('checkpurchase');
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
+app.set('host', process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
-});
+var callback = function() {
+  debug('Express server listening on port ' + app.get('port'));
+};
+
+if (process.env.OPENSHIFT_NODEJS_IP) {
+  app.listen(app.get('port'), app.get('host'), callback);
+} else {
+  app.listen(app.get('port'), callback);
+}
