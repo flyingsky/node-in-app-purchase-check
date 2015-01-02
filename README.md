@@ -3,13 +3,13 @@ node-in-app-purchase-check
 
 ## Why
 
-PhoneGap purchase plugin [cc.fovea.cordova.purchase](https://github.com/j3k0/cordova-plugin-purchase) is the best purchase plugin as I know for PhoneGap, which supports iOS and Android google play.
+PhoneGap purchase plugin [cc.fovea.cordova.purchase](https://github.com/j3k0/cordova-plugin-purchase) is the best purchase plugin as I know, which supports iOS and Android google play.
 
-To use it for auto-renewable subscription with this plugin, you have to provide receipt verification. This code provides an easy way to setup your own service.
+To use it for auto-renewable subscription, you have to provide receipt verification. This code provides an easy way to setup your own service in nodejs.
 
 ## How to use it
 
-1. You can deploy it to any nodejs platform, such as you can deploy it [openshift](https://www.openshift.com/), which is supported in our code.
+1. You can deploy it to any nodejs platform, such as you can deploy it [openshift](https://www.openshift.com/), which is supported by our code without any change. If you don't know how to use openshift, see here: [https://developers.openshift.com/en/node-js-getting-started.html]
 
 2. After deploy, you can change your code like below. You can see more sample code from here:[https://github.com/Fovea/cordova-plugin-purchase-demo]
 
