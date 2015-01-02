@@ -104,5 +104,5 @@ var callback = function() {
 if (process.env.OPENSHIFT_NODEJS_IP) {
   app.listen(app.get('port'), app.get('host'), callback);
 } else {
-  app.listen(app.get('port'), callback);
+  app.listen(app.get('port'), app.get('host'), callback);
 }
