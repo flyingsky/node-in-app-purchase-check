@@ -20,7 +20,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.all('/', function(req, res) {
+app.get('/', function(req, res) {
+  res.send('hello');
+});
+
+app.all('/check_purchase', function(req, res) {
   console.log(req.body);
   var transaction = req.param('transaction');
   var receipt = transaction.transactionReceipt;
