@@ -103,10 +103,9 @@ app.all('/verify', function(req, res) {
   var transaction = req.param('transaction');
   var password = req.param('password');
   var isAutoRenew = req.param('isAutoRenew') === 'true';
-  var isSandBox = req.param('isSandBox') === 'true';
   var receipt = transaction.transactionReceipt;
   var result = {};
-  var client = new IAPVerifier(password, !isSandBox);
+  var client = new IAPVerifier(password);
   var method = isAutoRenew ? client.verifyAutoRenewReceipt : client.verifyReceipt;
 
   method.call(client, receipt, true, function(valid, msg, data) {
@@ -116,6 +115,23 @@ app.all('/verify', function(req, res) {
       console.log("Valid receipt");
 
       result.data = data;
+
+      var latestReceipt = data.latest_receipt_info || receipt;
+      if (latestReceipt) {
+        if (latestReceipt.cancellation_date) {
+          result.ok = false;
+          result.data.code = ERR_PAYMENT_CANCELLED;
+          result.data.error = {message: msg || 'Subscription is cancelled'};
+        } else if (isAutoRenew) {
+          var expiresDate = parseInt(data.expires_date);
+          if (expiresDate < new Date().getTime()) {
+            result.ok = false;
+            var err = formatError(21006);
+            result.data.code = err.code;
+            result.data.error = {message: err.msg};
+          }
+        }
+      }
     } else {
       console.log("Invalid receipt");
 
@@ -126,14 +142,6 @@ app.all('/verify', function(req, res) {
           message: err.msg || msg
         }
       };
-
-      var latestReceipt = data.latest_receipt_info || receipt;
-      if (latestReceipt) {
-        if (latestReceipt.cancellation_date) {
-          result.data.code = ERR_PAYMENT_CANCELLED;
-          result.data.error = {message: msg || 'Subscription is cancelled'};
-        }
-      }
     }
 
     console.log(valid, msg, 'result valid, msg');

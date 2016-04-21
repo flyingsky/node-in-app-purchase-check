@@ -15,14 +15,14 @@ To use it for auto-renewable subscription, you have to provide receipt verificat
 
 
 ```
+    // Strong suggest to keep your password on server side!!!
     var password = 'Your app shared secrect from iTunes Connect'
     var productId = 'your product id';
     var productAlias = 'your product alias';
-    var isSandBox = true; // true for sandbox test, false for production
 
-    // Enable remote receipt validation
+    // Enable remote receipt validation, by default we validate on production environment, retry sandbox if fail
     // isAutoRenew=true means this is auto renew, false means non auto renew
-    var queryString = '?password=' + password + '&isSandBox=' + isSandBox + '&isAutoRenew=true';
+    var queryString = '?password=' + password + '&isAutoRenew=true';
     store.validator = "http://{Your host here}/verify" + queryString;
 ```
 
